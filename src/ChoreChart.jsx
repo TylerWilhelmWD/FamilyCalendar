@@ -10,7 +10,6 @@ const familyMembers = [
   { name: 'Gemma', color: 'bg-orange-200', textColor: 'text-orange-700' }
 ];
 
-// Default chore list (fallback if none exist)
 const defaultChores = {
   Mom: ['Unload dishwasher', 'Pack lunches', 'Sweep + Vacuum'],
   Dad: ['Litter Box', 'Call Pest Control', 'Take Out Trash'],
@@ -25,9 +24,8 @@ const ChoreChart = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newChore, setNewChore] = useState('');
   const [selectedMember, setSelectedMember] = useState(familyMembers[0].name);
-  const [choreCompletion, setChoreCompletion] = useState({}); // Tracks which chores are completed
+  const [choreCompletion, setChoreCompletion] = useState({});
 
-  // Load chores from localStorage or use defaults
   useEffect(() => {
     const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (stored) {
@@ -43,7 +41,6 @@ const ChoreChart = () => {
     setHasLoaded(true);
   }, []);
 
-  // Save to localStorage when chores change
   useEffect(() => {
     if (hasLoaded) {
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(chores));
@@ -73,17 +70,17 @@ const ChoreChart = () => {
     <div className="p-6">
       <h2 className="text-2xl font-bold text-center mb-4">Chore Chart</h2>
 
-      {/* Chore Chart Grid */}
-      <div className="flex gap-4 overflow-x-auto">
+      {/* Chore Chart Grid - 3 Columns Per Row & Scrollable */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto max-h-[70vh] p-4">
         {familyMembers.map(({ name, color, textColor }) => {
-          const memberChores = chores[name] || []; // Get chores for this member
+          const memberChores = chores[name] || [];
           const totalChores = memberChores.length;
           const completedChores = memberChores.filter(
             (chore) => choreCompletion[`${name}_${chore}`]
           ).length;
 
           return (
-            <div key={name} className={`p-4 rounded-xl w-1/5 min-w-[200px] ${color}`}>
+            <div key={name} className={`p-4 rounded-xl ${color} shadow-md`}>
               <h3 className={`text-lg font-bold ${textColor} mb-2`}>
                 {name} <span className="text-gray-600 text-sm">({completedChores}/{totalChores})</span>
               </h3>
@@ -108,10 +105,10 @@ const ChoreChart = () => {
         })}
       </div>
 
-      {/* Floating Add Chore Button */}
+      {/* Floating Add Chore Button - Above Nav */}
       <button
         onClick={() => setIsModalOpen(true)}
-        className="fixed bottom-6 right-6 bg-blue-500 text-white text-3xl rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-blue-600"
+        className="fixed bottom-16 right-6 bg-blue-500 text-white text-3xl rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-blue-600"
       >
         +
       </button>

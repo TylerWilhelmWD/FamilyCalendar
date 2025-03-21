@@ -8,9 +8,15 @@ import TodoList from './TodoList';
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-100 pb-16">
-        {/* Page Content */}
-        <div className="p-6">
+      <div className="flex flex-col h-screen bg-gray-100">
+        
+        {/* Top Banner (Can be adjusted if needed) */}
+        <header className="bg-white shadow-md p-4 text-center font-bold text-xl">
+          Family Calendar
+        </header>
+
+        {/* Main Content Area - Respects Nav & Header */}
+        <div className="flex-1 overflow-y-auto p-6">
           <Routes>
             <Route path="/" element={<CalendarView />} />
             <Route path="/chores" element={<ChoreChart />} />
@@ -18,8 +24,8 @@ function App() {
           </Routes>
         </div>
 
-        {/* Sticky Bottom Navigation Bar */}
-        <nav className="fixed bottom-0 left-0 w-full bg-white shadow-md border-t flex justify-around py-3">
+        {/* Sticky Bottom Navigation Bar - Transparent & Floating */}
+        <nav className="fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-md shadow-md border-t flex justify-around py-3 z-50">
           <NavLink to="/" className="flex flex-col items-center text-gray-500 hover:text-blue-500">
             <FaCalendarAlt size={24} />
             <span className="text-xs">Calendar</span>
@@ -41,6 +47,7 @@ function App() {
             <span className="text-xs">Lists</span>
           </NavLink>
         </nav>
+
       </div>
     </Router>
   );
