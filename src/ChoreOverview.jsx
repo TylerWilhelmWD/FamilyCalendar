@@ -12,6 +12,7 @@ const familyMembers = [
 
 const ChoreOverview = () => {
   const [chores, setChores] = useState({});
+  const [selectedMember, setSelectedMember] = useState('All');
 
   useEffect(() => {
     const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -24,11 +25,29 @@ const ChoreOverview = () => {
     }
   }, []);
 
+  const filteredMembers = selectedMember === 'All'
+    ? familyMembers
+    : familyMembers.filter((m) => m.name === selectedMember);
+
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold text-center mb-4">Chore Overview</h2>
 
-      {/* Table Layout */}
+      {/* Dropdown Filter */}
+      <div className="mb-4 flex justify-center">
+        <select
+          value={selectedMember}
+          onChange={(e) => setSelectedMember(e.target.value)}
+          className="border border-gray-300 rounded p-2"
+        >
+          <option value="All">All Members</option>
+          {familyMembers.map(({ name }) => (
+            <option key={name} value={name}>{name}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white shadow-md rounded-lg">
           <thead className="bg-gray-200">
@@ -40,13 +59,17 @@ const ChoreOverview = () => {
             </tr>
           </thead>
           <tbody>
-            {familyMembers.map(({ name, textColor }) => (
+            {filteredMembers.map(({ name, textColor }) =>
               (chores[name] || []).map((chore, index) => (
                 <tr key={`${name}_${index}`} className="border-t">
                   <td className={`p-3 font-semibold ${textColor}`}>{name}</td>
                   <td className="p-3">{chore.name}</td>
                   <td className="p-3">
-                    {chore.repeat === 'daily' ? 'Daily' : chore.repeat === 'weekly' ? 'Weekly' : 'Monthly'}
+                    {chore.repeat === 'daily'
+                      ? 'Daily'
+                      : chore.repeat === 'weekly'
+                      ? 'Weekly'
+                      : 'Monthly'}
                   </td>
                   <td className="p-3">
                     {chore.repeat === 'weekly'
@@ -57,7 +80,7 @@ const ChoreOverview = () => {
                   </td>
                 </tr>
               ))
-            ))}
+            )}
           </tbody>
         </table>
       </div>
