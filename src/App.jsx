@@ -1,9 +1,16 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
-import { FaCalendarAlt, FaBroom, FaUtensils, FaImages, FaList } from 'react-icons/fa';
-import CalendarView from './CalendarView';
+import {
+  FaCalendarAlt,
+  FaBroom,
+  FaUtensils,
+  FaImages,
+  FaList,
+  FaClipboardList  // ✅ Add this line
+} from 'react-icons/fa';import CalendarView from './CalendarView';
 import ChoreChart from './ChoreChart';
 import TodoList from './TodoList';
+import ChoreOverview from './ChoreOverview';
 
 function App() {
   return (
@@ -21,6 +28,7 @@ function App() {
             <Route path="/" element={<CalendarView />} />
             <Route path="/chores" element={<ChoreChart />} />
             <Route path="/todos" element={<TodoList />} />
+            <Route path="/chore-overview" element={<ChoreOverview />} />
           </Routes>
         </div>
 
@@ -42,10 +50,15 @@ function App() {
             <FaImages size={24} />
             <span className="text-xs">Photos</span>
           </NavLink>
-          <NavLink to="/lists" className="flex flex-col items-center text-gray-500 hover:text-blue-500">
+          {/* <NavLink to="/lists" className="flex flex-col items-center text-gray-500 hover:text-blue-500">
             <FaList size={24} />
             <span className="text-xs">Lists</span>
-          </NavLink>
+          </NavLink> */}
+          <NavLink to="/chore-overview" className="flex flex-col items-center text-gray-500 hover:text-blue-500">
+  <FaClipboardList size={24} />
+  <span className="text-xs">Overview</span>
+</NavLink>
+          
         </nav>
 
       </div>
