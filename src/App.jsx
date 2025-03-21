@@ -1,55 +1,48 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
+import { FaCalendarAlt, FaBroom, FaUtensils, FaImages, FaList } from 'react-icons/fa';
 import CalendarView from './CalendarView';
+import ChoreChart from './ChoreChart';
 import TodoList from './TodoList';
-import EventForm from './EventForm';
-
-const LOCAL_STORAGE_KEY = 'familyCalendar.events';
 
 function App() {
-  const [events, setEvents] = useState([]);
-  const [hasLoaded, setHasLoaded] = useState(false); // 🆕 fix
-
-  // ✅ Load events from localStorage on first load
-  useEffect(() => {
-    const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        const restored = parsed.map((event) => ({
-          ...event,
-          start: new Date(event.start),
-          end: new Date(event.end),
-        }));
-        setEvents(restored);
-      } catch (e) {
-        console.error('❌ Failed to parse saved events:', e);
-      }
-    }
-    setHasLoaded(true); // ✅ signal that loading is complete
-  }, []);
-
-  // ✅ Save to localStorage only after loading is done
-  useEffect(() => {
-    if (hasLoaded) {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(events));
-    }
-  }, [events, hasLoaded]);
-
-  const handleAddEvent = (newEvent) => {
-    setEvents((prev) => [...prev, newEvent]);
-  };
-
   return (
-    <div className="flex flex-col md:flex-row gap-6 p-6 bg-gray-100 min-h-screen">
-      <div className="flex-1">
-        <h1 className="text-3xl font-bold mb-4">Family Calendar</h1>
-        <EventForm onAddEvent={handleAddEvent} />
-        <CalendarView events={events} />
+    <Router>
+      <div className="min-h-screen bg-gray-100 pb-16">
+        {/* Page Content */}
+        <div className="p-6">
+          <Routes>
+            <Route path="/" element={<CalendarView />} />
+            <Route path="/chores" element={<ChoreChart />} />
+            <Route path="/todos" element={<TodoList />} />
+          </Routes>
+        </div>
+
+        {/* Sticky Bottom Navigation Bar */}
+        <nav className="fixed bottom-0 left-0 w-full bg-white shadow-md border-t flex justify-around py-3">
+          <NavLink to="/" className="flex flex-col items-center text-gray-500 hover:text-blue-500">
+            <FaCalendarAlt size={24} />
+            <span className="text-xs">Calendar</span>
+          </NavLink>
+          <NavLink to="/chores" className="flex flex-col items-center text-gray-500 hover:text-blue-500">
+            <FaBroom size={24} />
+            <span className="text-xs">Chores</span>
+          </NavLink>
+          <NavLink to="/meals" className="flex flex-col items-center text-gray-500 hover:text-blue-500">
+            <FaUtensils size={24} />
+            <span className="text-xs">Meals</span>
+          </NavLink>
+          <NavLink to="/photos" className="flex flex-col items-center text-gray-500 hover:text-blue-500">
+            <FaImages size={24} />
+            <span className="text-xs">Photos</span>
+          </NavLink>
+          <NavLink to="/lists" className="flex flex-col items-center text-gray-500 hover:text-blue-500">
+            <FaList size={24} />
+            <span className="text-xs">Lists</span>
+          </NavLink>
+        </nav>
       </div>
-      <div className="w-full md:w-1/3">
-        <TodoList />
-      </div>
-    </div>
+    </Router>
   );
 }
 
